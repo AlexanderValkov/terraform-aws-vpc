@@ -4,7 +4,9 @@ provider "aws" {
 
 
 resource "aws_vpc" "main" {
-  cidr_block = var.vpc_cidr_block
+  cidr_block           = var.vpc_cidr_block
+  enable_dns_support   = true
+  enable_dns_hostnames = true
 
   tags = {
     Name = var.vpc_tag_Name
@@ -19,10 +21,10 @@ resource "aws_subnet" "public" {
   cidr_block              = cidrsubnet(var.vpc_cidr_block, 8, count.index)
   map_public_ip_on_launch = true
 
-  tags = {
-    Name  = var.subnet.public[count.index].subnet_tag_Name
-    scope = "public"
-  }
+  tags = merge({
+      scope = "public"
+    },
+    var.subnet.public[count.index].tags)
 }
 
 
@@ -33,10 +35,10 @@ resource "aws_subnet" "private" {
   cidr_block              = cidrsubnet(var.vpc_cidr_block, 8, count.index + length(var.subnet.public))
   map_public_ip_on_launch = false
 
-  tags = {
-    Name  = var.subnet.private[count.index].subnet_tag_Name
-    scope = "private"
-  }
+  tags = merge({
+      scope = "private"
+    },
+    var.subnet.private[count.index].tags)
 }
 
 

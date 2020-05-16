@@ -6,29 +6,41 @@ subnet = {
   public = [
     {
       az_postfix      = "a"
-      subnet_tag_Name = "public_a"
+      tags = {
+        Name = "public_a"
+      }
     },
     {
       az_postfix      = "b"
-      subnet_tag_Name = "public_b"
+      tags = {
+        Name = "public_b"
+      }
     },
     {
       az_postfix      = "c"
-      subnet_tag_Name = "public_c"
+      tags = {
+        Name = "public_c"
+      }
     }
   ]
   private = [
     {
       az_postfix      = "a"
-      subnet_tag_Name = "private_a"
+      tags = {
+        Name = "private_a"
+      }
     },
     {
       az_postfix      = "b"
-      subnet_tag_Name = "private_b"
+      tags = {
+        Name = "private_b"
+      }
     },
     {
       az_postfix      = "c"
-      subnet_tag_Name = "private_c"
+      tags = {
+        Name = "private_c"
+      }
     }
   ]
 }
