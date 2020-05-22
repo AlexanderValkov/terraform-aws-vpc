@@ -1,5 +1,6 @@
 provider "aws" {
   region = var.region
+  version = "~> 2.61"
 }
 
 
@@ -95,8 +96,10 @@ data "aws_ami" "nat_amzn" {
 
 
 resource "aws_instance" "nat" {
+  count = length(aws_subnet.private) == 0 ? 0 : 1
   ami                         = data.aws_ami.nat_amzn.image_id
   instance_type               = "t2.micro"
+  key_name                    = var.key_name
   subnet_id                   = aws_subnet.public[0].id
   vpc_security_group_ids      = [aws_security_group.nat.id]
   source_dest_check           = false
@@ -109,13 +112,15 @@ resource "aws_instance" "nat" {
 
 
 resource "aws_eip" "nat" {
-  instance = aws_instance.nat.id
+  count = length(aws_subnet.private) == 0 ? 0 : 1
+  instance = aws_instance.nat[0].id
   vpc      = true
 }
 
 
 resource "aws_route" "nat" {
+  count = length(aws_subnet.private) == 0 ? 0 : 1
   route_table_id         = aws_vpc.main.main_route_table_id
   destination_cidr_block = "0.0.0.0/0"
-  instance_id            = aws_instance.nat.id
+  instance_id            = aws_instance.nat[0].id
 }
